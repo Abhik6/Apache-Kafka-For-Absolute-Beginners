@@ -1,0 +1,152 @@
+Welcome back.
+In the earlier video,
+we learned to auto-generate Avro serializable POJOs from the schema definition.
+In this lecture, we are going to use them in a Kafka producer program.
+I hope you still remember our POS simulator program.
+We created that example in one of the earlier lecture.
+That example was sending realistic invoices to Kafka,
+but those messages were serialized using JSON serializer. Right?
+We will take the same example,
+basically copy the code,
+and make some necessary changes,
+so it starts sending AVRO invoices.
+So, the problem is defined.
+Let's create a solution.
+First thing first,
+AVRO serializer is offered by Confluent Platform,
+and we are going to develop and execute this example on Confluent community edition.
+I am going to create a brand new maven project from scratch.
+I will show you step by step process so you can do it yourself.
+Let me create an empty maven project.
+Â Good.
+The first thing is to set up the necessary maven dependencies.
+Let's do it.
+We will be using JDK 1.8 like all other projects.
+So let's define a property for the same.
+We will be using Confluent 5.3.0.
+So, one property for the confluent version.
+Instead of using Apache Kafka,
+we will be using a Kafka version which comes with Confluent 5.3.0.
+Using Confluent Kafka version is necessary to avoid version conflicts
+because we are going to execute our program on Confluent platform and hence we need the same version.
+And this is how Confluent defines Kafka version in their platform.
+Confluent artifacts are not hosted in standard Maven repository.
+So, we need to add a custom repository here.
+So, confluent packages will come from this repository.
+Now, we are ready to define the dependencies.
+We need Kafka Avro serializer offered by Confluent. Right?
+When we serialized our messages using JSON,
+we used a JSON serializer that I created.
+But now, we want to serialize our messages using AVRO,
+and we will be using AVRO serializer that Confluent has created.
+Next one is Kafka Client.
+We are going to create a producer, so we need the Kafka Client libraries.
+The last dependency is for log4j.
+You already know this one. Right?
+Now, I will open my project that we created in the previous lecture.
+So, this is the example that generated Java Classes from AVRO schema.
+Let me copy these schema definitions.
+We also need the AVRO Maven plugin. Right?
+Let me also copy that part and paste it in our pom file.
+We also need a log4j configuration file.
+Â So let me copy-paste it here from another earlier project.
+After getting the Schema definition and Maven dependencies,
+we are ready to compile this project and get our Java Classes.
+Good.
+So, we reached the state of the earlier project.
+If you are worried about these warnings, place a line in your pom file properties.
+Recompile, and it should go away.
+Great!
+Good going so far.
+Let me quickly recap.
+We created an empty project.
+Defined some dependencies to work with the confluent platform.
+Then we copied the Avro schema definition from our earlier project.
+In summary, we just replication our Avro to POJO project with some additional dependencies.
+Otherwise, this project is essentially the same as the Avro-to-POJO example. Right?
+Now we want to take it forward and make a pos simulator.
+But we have already done that for JSON.
+This project is also going to do the same thing except for one fundamental difference.
+Instead of sending JSON, it should send AVRO.
+So, I am going to open the old POS simulator
+and copy most of the code from that project and make only necessary changes.
+Let's open the pos simulator example.
+Ok, so what else do we have here.
+We got these types in our current project.
+But we also need the data generator and the sample data directory.
+Let me copy it to my current project.
+Good.
+Â Let me check if I got any errors.
+Ok, so invoice generator class is showing an error.
+A string cannot be applied to Char Sequence.
+Well, the Avro Maven plugin uses char sequence instead of String.
+We can fix this problem.
+That's it.
+What else do we need?
+We do not need this Json Serializer.
+Why?
+Because we are going to use AVRO serializer.
+So let's leave this.
+Now, I need these three classes.
+Let me copy them also.
+Ok, Runnable Producer is showing an error.
+Cannot infer arguments.
+Well, this one is less intuitive.
+It cannot understand types because getStoreID is returning a char sequence.
+Let me convert it to a String.
+Done.
+Now comes the POS simulator.
+This one is the main class where we need some real changes.
+I mean, so far we simply assembled things and fixed some simple errors.
+At a high level, everything till now is almost the same as it was for JSON based producer.
+Now we are going to make some changes that are the fundamental changes for making it work with the AVRO.
+JSON Serializer.
+Right!
+We must change this one to KafkaAvroSerializer.
+Confluent Avro Serializer does not work without the Confluent Schema registry.
+So, even if you don't need it, you must add one configuration for the schema registry.
+Â Here is the line that you need to add.
+Done.
+No?
+Well, it shows some error.
+Let me remove it.
+We are not using this class.
+Great.
+You may want to move this constant to App Configs.
+Now it looks better.
+Great!
+Looks like we are done.
+So, how is the JSON project different from this AVRO project.
+In summary, All you need is four main things.
+Schema definition using AVRO schema and Avro compatible types.
+KafkaAvroSerializer
+Schema registry configuration.
+And finally, Confluent specific dependencies.
+That's all.
+Do you want to test it?
+We need scripts.
+Let me copy all the scripts from the older project.
+Well, the scripts are mostly the same, but we want them to execute from the confluent home directory.
+So, let me prefix the confluent home directory location in all the scripts.
+We also want to change the configuration file location. Right?
+You also need to start the schema registry.
+So let me add one script for the same.
+Good.
+Now we can start the services,
+create the topic,
+and run our simulator.
+Oops.
+No worries.
+Let me define arguments.
+Topic name, Number of producer threads, and milliseconds between two messages.
+Voila!
+It is sending messages.
+If you start a consumer, you can see some content.
+But Avro is a binary format.
+So we can't understand it.
+Great.
+We are done.
+The project file is included in your resources.
+But I recommend you try it yourself and refer the source code when you get stuck.
+So, see you in the next lecture.
+Keep learning and Keep Growing.
