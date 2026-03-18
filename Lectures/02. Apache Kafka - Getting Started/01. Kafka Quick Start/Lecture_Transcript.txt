@@ -1,0 +1,19 @@
+Welcome back.
+In the earlier section, you learned about the Kafka ecosystem components and made yourself familiar
+with who is who in Kafka stack and when you should be using which tool.
+However, all that can be solidified further when you can start doing some hands on activity and explore
+them. With that objective in mind,
+we are dedicating this section to help you get started with Apache Kafka. In this section,
+we will be doing following things.
+We are going to set up a single node Kafka on your local machine.
+Then you will be using off the shelf command line
+Kafka producer and consumer. Kafka is a cluster of brokers, right?
+So we will go ahead and configure three Kafka brokers on your local machine and help you get a feel
+of how a cluster works.
+Finally, we will be using a command line producer to send some messages and start a couple of consumers
+to see the consumer workload sharing in action.
+While we do all this, you will be learning a few more things about the Kafka cluster and how data is stored
+in Kafka.
+Great!
+See you in the next lecture.
+Keep learning and keep growing.
